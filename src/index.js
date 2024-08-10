@@ -38,42 +38,35 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
-let arr = [];
-let start = 0;
-for (let i = 0; i < expr.length / 10; i++) {
-    arr[i] = expr.slice(start, start + 10);
-    start += 10;
-}
+    let arr = [];
+    let start = 0;
+    for (let i = 0; i < expr.length / 10; i++) {
+        arr[i] = expr.slice(start, start + 10);
+        start += 10;
+    }
 
-console.log(arr)
+    function replaceNumbers (item) {
+        return item.replace(/11/ig, '-').replace(/10/ig, '.').replace(/0/ig, '').replace("**********", ' ');
+    }
 
-function deleteZero (item) {
-    return item.replace(/[0]+/, '');
-}
+    let newArr = arr.map(replaceNumbers)
 
-let newArr = arr.map(deleteZero);
+    let morseCode = newArr.join(' ');
 
-function replaceTen (item) {
-    return item.replace(/10/g, '.');
-}
+    let phraseConverted = [];
 
-let arrWithDot = newArr.map(replaceTen);
+    let wordInCode = morseCode.split("   ");
 
-function replaceEleven (item) {
-    return item.replace(/11/g, '-');
-}
+    wordInCode.map(function (word) {
+        word.split(" ").map(function (letter) {
+            phraseConverted.push(MORSE_TABLE[letter]);
+        });
+        phraseConverted.push(" ");
+    }) 
 
-let arrWithDash = arrWithDot.map(replaceEleven);
-
-function replaceAsterix (item) {
-    return item.replace("**********", ' ');
-}
-
-let arrWithSpace = arrWithDash.map(replaceAsterix);
-
-let endString = arrWithSpace.join(' ');
-
-return endString;
+    let finish = phraseConverted.join('');
+    let phraseWithoutSpace = finish.slice(0, -1);
+    return phraseWithoutSpace;
 
 }
 
